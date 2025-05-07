@@ -1,0 +1,205 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lead Unity Developer Portfolio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        header {
+            background: #1a1a1a;
+            color: #fff;
+            text-align: center;
+            padding: 2rem;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .project {
+            background: #fff;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .project h2 {
+            color: #1a1a1a;
+            margin-top: 0;
+        }
+        .project a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .project a:hover {
+            text-decoration: underline;
+        }
+        .media {
+            margin-top: 20px;
+        }
+        .media img, .media iframe {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+            margin-top: 20px;
+        }
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+            .container {
+                padding: 10px;
+            }
+            .project {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Lead Unity Developer Portfolio</h1>
+        <p>Showcasing expertise in Unity game development, multiplayer systems, performance optimization, and plugin development</p>
+    </header>
+
+    <div class="container">
+        <section class="project">
+            <h2>Unity Payment Gateway Plugin</h2>
+            <p><strong>Role:</strong> Lead Unity Developer (5 months, Ongoing)</p>
+            <p><strong>Project Overview:</strong> Currently developing a Unity plugin for a major payment gateway organization. The plugin integrates secure payment processing into Unity applications, enabling seamless in-game transactions and supporting multiple payment methods. My responsibilities include designing the plugin architecture, ensuring compatibility with Unity's ecosystem, and implementing robust security measures.</p>
+            <p><strong>Key Contributions:</strong></p>
+            <ul>
+                <li>Architected a scalable plugin for integrating payment gateway services into Unity.</li>
+                <li>Implemented secure transaction protocols to safeguard user data.</li>
+                <li>Ensured cross-platform compatibility and optimized performance within Unity applications.</li>
+            </ul>
+            <p><strong>Status:</strong> In Development</p>
+        </section>
+
+        <section class="project">
+            <h2>Sinverse</h2>
+            <p><strong>Role:</strong> Lead Unity Developer (2 years, Ongoing)</p>
+            <p><strong>Project Overview:</strong> Sinverse is a multiplayer game with an e-sports mode featuring Team Deathmatch. As the lead developer, I spearheaded the migration from PUN2 (client-hosted architecture) to Photon Fusion (server-authoritative gameplay). Using the BR200 sample as a foundation, I extensively customized it to meet the game’s requirements. I also led the development of all major modules, ensuring robust performance and scalability.</p>
+	    <ul>
+                <li>Players can purchase lands and business licenses as NFTs</li>
+                <li>Lands can be used to build custom homes or set up businesses</li>
+                <li>Players can participate in events or kill each other for rewards</li>
+                <li>Several districts with varying levels of difficulty and AI opponents</li>
+            </ul>
+            <p><strong>Key Contributions:</strong></p>
+            <ul>
+                <li>Migrated multiplayer infrastructure from PUN2 to Photon Fusion for enhanced server authority.</li>
+                <li>Customized the BR200 sample to align with game-specific needs.</li>
+                <li>Led development of core gameplay modules, including e-sports Team Deathmatch mode.</li>
+            </ul>
+            <p><strong>Status:</strong> In Development</p>
+            <p><strong>Website:</strong> <a href="https://sinverse.com/home" target="_blank">sinverse.com</a></p>
+            <div class="media">
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/6V1q-BxcmFs" title="Sinverse Gameplay" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </section>
+
+        <section class="project">
+            <h2>HUSLVerse</h2>
+            <p><strong>Role:</strong> Lead Unity Developer (1 year)</p>
+            <p><strong>Project Overview:</strong> HUSLVerse is a player-driven world where users purchase land and construct custom builds. I led the development for one year, implementing minigames and optimizing performance through position-based loading and unloading of the world around the player, critical for handling player-built environments.</p>
+            <p><strong>Key Contributions:</strong></p>
+            <ul>
+                <li>Developed and integrated minigames to enhance player engagement.</li>
+                <li>Implemented dynamic world loading/unloading based on player position to optimize performance.</li>
+                <li>Managed development of player-built world systems, ensuring scalability.</li>
+            </ul>
+            <p><strong>Website:</strong> <a href="https://www.thehusl.io/" target="_blank">thehusl.io</a></p>
+            <div class="media">
+                <img src="https://www.thehusl.io/static/huslverse-screenshot.jpg" alt="HUSLVerse Gameplay Screenshot" onerror="this.style.display='none'">
+            </div>
+        </section ..
+
+        <section class="project">
+            <h2>Stick Pool Club</h2>
+            <p><strong>Role:</strong> Lead Backend & Multiplayer Developer</p>
+            <p><strong>Project Overview:</strong> Stick Pool Club was a real-money multiplayer game featuring Poker, 8 Ball Pool, Call Break, Ludo, and Solitaire. I designed and implemented the entire backend architecture using GameSparks and developed multiplayer functionality for all sub-games except 8 Ball Pool, utilizing the player.io server. A notable feature was the Live Poker mode, enabling real-time communication between players and a visible dealer.</p>
+            <p><strong>Key Contributions:</strong></p>
+            <ul>
+                <li>Built the backend architecture from scratch using GameSparks.</li>
+                <li>Developed multiplayer systems for Poker, Call Break, Ludo, and Solitaire on player.io.</li>
+                <li>Implemented Live Poker feature with real-time dealer interaction.</li>
+            </ul>
+            <p><strong>Status:</strong> Discontinued</p>
+            <div class="media">
+                <img src="https://stickpoolclub.com/screenshot.jpg" alt="Stick Pool Club Screenshot" onerror="this.style.display='none'">
+            </div>
+        </section>
+
+        <section class="project">
+            <h2>Additional Projects</h2>
+            <p><strong>Real-Money Card Games</strong></p>
+            <p>Developed multiple real-money card games, including Poker and Teen Patti, for private clients. Focused on secure multiplayer systems and robust gameplay mechanics tailored to client specifications.</p>
+            <p><strong>Hypercasual Games & Faro Multiplayer</strong></p>
+            <p>Contributed to several hypercasual games and a Faro multiplayer title during my first job. Gained foundational experience in Unity development, multiplayer systems, and rapid prototyping.</p>
+        </section>
+    </div>
+
+    <footer>
+        <p>Contact: <a href="mailto://dushyantkumawat666@gmail.com" target="_blank">Email</a> | LinkedIn: <a href="https://www.linkedin.com/in/dushyant-kumawat-70027448/" target="_blank">Dushyant</a></p>
+        <p>© 2025 Lead Unity Developer Portfolio</p>
+    </footer>
+</body>
+</html>
